@@ -28,8 +28,87 @@
   </dependencies>
 
   <build>
-    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+    <filters>
+      <filter>src/main/filters/default.properties</filter>
+    </filters>
+    <resources>
+
+      <resource>
+        <filtering>true</filtering>
+        <directory>${basedir}/src/main/command</directory>
+        <includes>
+          <include>lifecycledemo.sh</include>
+        </includes>
+        <targetPath>${basedir}/target</targetPath>
+      </resource>
+
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
       <plugins>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.1</version>
+          <executions>
+            <execution>
+              <id>id.pre-clean</id>
+              <phase>pre-clean</phase>
+              <goals>
+                <goal>run</goal>
+              </goals>
+              <configuration>
+                <tasks>
+                  <echo>**********pre-clean phase</echo>
+                </tasks>
+              </configuration>
+            </execution>
+
+            <execution>
+              <id>id.clean</id>
+              <phase>clean</phase>
+              <goals>
+                <goal>run</goal>
+              </goals>
+              <configuration>
+                <tasks>
+                  <echo>**********clean phase</echo>
+                </tasks>
+              </configuration>
+            </execution>
+
+            <execution>
+              <id>id.post-clean</id>
+              <phase>post-clean</phase>
+              <goals>
+                <goal>run</goal>
+              </goals>
+              <configuration>
+                <tasks>
+                  <echo>**********post-clean phase</echo>
+                </tasks>
+              </configuration>
+            </execution>
+
+            <execution>
+              <id>id.chmod-permission</id>
+              <phase>process-resources</phase>
+              <goals>
+                <goal>run</goal>
+              </goals>
+              <configuration>
+                <tasks>
+                  <chmod file="${basedir}/target/lifecycledemo.sh" perm="+x"/>
+                </tasks>
+              </configuration>
+            </execution>
+
+          </executions>
+        </plugin>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
@@ -70,6 +149,5 @@
           <version>3.0.0</version>
         </plugin>
       </plugins>
-    </pluginManagement>
   </build>
 </project>
